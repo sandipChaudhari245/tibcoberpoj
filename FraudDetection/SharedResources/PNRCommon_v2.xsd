@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	 xmlns="http://www.united.com/schemas/pnr/pnrservice_v2.xsd"
+	 targetNamespace="http://www.united.com/schemas/pnr/pnrservice_v2.xsd"
+	 elementFormDefault="qualified"
+	 attributeFormDefault="unqualified">
+	<xs:complexType name="FlightLeg">
+		<xs:attribute name="FlightNumber" type="xs:string" use="required"/>
+		<xs:attribute name="Origin" type="xs:string" use="required"/>
+		<xs:attribute name="Destination" type="xs:string"/>
+		<xs:attribute name="CarrierCd" type="xs:string" use="required"/>
+		<xs:attribute name="ScheduledDepartureDate" type="xs:string" use="required"/>
+		<xs:attribute name="LegIndex" type="xs:integer"/>
+		<xs:attribute name="MktCarrCd" type="xs:string"/>
+
+		<!--- new attributes added for pnr eventing 7/16/14
+		 -->
+		<xs:attribute name="ScheduledDepartureTime" type="xs:string"/>
+		<xs:attribute name="ScheduledArrivalTime" type="xs:string"/>
+		<xs:attribute name="ScheduledDepartureDay" type="xs:string"/>
+
+		<!-- e.g, +1, or -1 -->
+		<xs:attribute name="ScheduledDepArrDayOffset" type="xs:string"/>
+		<xs:attribute name="isCodeShare" type="xs:boolean"/>
+		<xs:attribute name="isReverseCodeShare" type="xs:boolean"/>
+		<xs:attribute name="AdvancedSeat" type="xs:string"/>  <!-- eventing, 4/14/15 -->
+		<xs:attribute name="action" type="EventActionCode"/>
+	</xs:complexType>
+	<xs:complexType name="RequestHeader">
+		<xs:attribute name="appID" type="xs:string" use="required"/>
+		<xs:attribute name="channelID" type="xs:string"/>
+		<xs:attribute name="user" type="xs:string"/>
+		<xs:attribute name="correlationID" type="xs:string"/>
+		<xs:attribute name="version" type="xs:string"/>
+		<xs:attribute name="timestamp" type="xs:dateTime"/>
+	</xs:complexType>
+	<xs:complexType name="ResponseHeader">
+		<xs:sequence>
+			<xs:element name="RequestHeader" type="RequestHeader" minOccurs="0"/>
+			<xs:element name="StatusCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Success"/>
+						<xs:enumeration value="Failed"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ErrorDescription" type="xs:string" minOccurs="0"/>
+			<xs:element name="timestamp" type="xs:dateTime"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PNRGroups">
+		<xs:sequence>
+			<xs:element name="PNRGroup" type="PNRGroup" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PNRGroup">
+		<xs:sequence>
+			<xs:element name="FlightSegment" type="FlightLeg" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="Passenger" type="Passenger" minOccurs="0" maxOccurs="unbounded"/>
+
+			<!--- new elements added for pnr eventing 7/16/14 -->
+			<xs:element name="PNRContactData" type="ContactData" minOccurs="0"/>
+			<xs:element name="AwardTravelPayee" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="FQTVAccountNumber" type="xs:string"/>
+					<xs:attribute name="FQTVCarrierCode" type="xs:string"/>
+					<xs:attribute name="FQTVEliteStatusCode" type="xs:string"/>
+					<xs:attribute name="FQTVName" type="xs:string"/>
+					<xs:attribute name="FQTVValidationCode" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="RecordLocator" type="xs:string" use="required"/>
+		<xs:attribute name="PnrCreationDtTm" type="xs:dateTime"/>
+		<xs:attribute name="BookedDateTime" type="xs:dateTime"/>
+		<xs:attribute name="ParentRecordLocator" type="xs:string"/>
+		<xs:attribute name="GroupName" type="xs:string"/>
+		<xs:attribute name="NumberInParty" type="xs:integer"/>
+
+		<!--- new attributes added for pnr eventing 7/16/14 -->
+		<xs:attribute name="OARecordLocator" type="xs:string"/>
+		<xs:attribute name="isSkyMarshall" type="xs:boolean"/>
+		<xs:attribute name="isAPIS" type="xs:boolean"/>
+		<xs:attribute name="TravelAgent" type="xs:string"/>
+		<xs:attribute name="CRSCode" type="xs:string"/>
+			<!-- eventing, 4/14/15 -->
+		<xs:attribute name="CorpTravelAgency" type="xs:string" /> 
+		<xs:attribute name="CorpTravelCorpName" type="xs:string" />
+	</xs:complexType>
+	<xs:complexType name="Passenger">
+		<xs:sequence>
+			<xs:element name="Segment" type="PaxSegment" minOccurs="0" maxOccurs="unbounded"/>
+
+			<!--- new elements added for pnr eventing 7/16/14 -->
+			<xs:element name="SecureFlightData" type="SecureFlightData" minOccurs="0"/>
+			<xs:element name="TravelContactData" type="ContactData" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="PassengerSurname" type="xs:string"/>
+		<xs:attribute name="PassengerFirstName" type="xs:string"/>
+		<xs:attribute name="PassengerSurnameKey" type="xs:string"/>
+		<xs:attribute name="PassengerInitialKey" type="xs:string"/>
+		<xs:attribute name="EmployeeId" type="xs:string"/>
+		<xs:attribute name="FQTVAccountNumber" type="xs:string"/>
+		<xs:attribute name="FQTVCarrierCode" type="xs:string"/>
+		<xs:attribute name="FQTVEliteStatusCode" type="xs:string"/>
+
+		<!--- new elements added for pnr eventing 7/16/14 -->
+		<xs:attribute name="FQTVValidationCode" type="xs:string"/>
+		<xs:attribute name="LastNamePos" type="xs:integer"/>
+		<xs:attribute name="FirstNamePos" type="xs:integer"/>
+		<xs:attribute name="action" type="EventActionCode"/>
+	</xs:complexType>
+	<xs:complexType name="PaxSegment">
+		<xs:sequence>
+			<xs:element name="SSR" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="Code" type="xs:string"/>
+					<xs:attribute name="Comment" type="xs:string"/>
+					<xs:attribute name="RawSSR" type="xs:string"/>
+					<!--- new attributes added for pnr eventing 7/16/14 -->
+					<xs:attribute name="action" type="EventActionCode"/>
+				</xs:complexType>
+			</xs:element>
+			<!--- new elements (MealRequest, InvalidMealRequest) added for meal support 10/02/15 
+			<xs:element name="MealRequest" minOccurs="0" >
+				<xs:complexType>
+					<xs:attribute name="Code" type="xs:string" />
+					<xs:attribute name="IsValid" type="xs:boolean" />
+					<xs:attribute name="IsAvailable" type="xs:boolean" />                                                                               
+					<xs:attribute name="Comments" type="xs:string" />
+					<xs:attribute name="action" type="EventActionCode"/>
+				</xs:complexType>
+			</xs:element> -->
+		</xs:sequence>
+		<xs:attribute name="FlightNumber" type="xs:string" use="required"/>
+		<xs:attribute name="Origin" type="xs:string" use="required"/>
+		<xs:attribute name="Destination" type="xs:string" use="required"/>
+		<xs:attribute name="CarrierCd" type="xs:string" use="required"/>
+		<xs:attribute name="ScheduledDepartureDate" type="xs:string" use="required"/>
+		<xs:attribute name="CurrentClassOfService" type="xs:string"/>
+		<xs:attribute name="BookedClassOfService" type="xs:string"/>
+		<xs:attribute name="SegmentActionCode" type="xs:string"/>
+		<xs:attribute name="PrevSegmentActionCode" type="xs:string"/>
+		<xs:attribute name="hasInboundCnx" type="xs:string"/>
+		<xs:attribute name="hasOutboundCnx" type="xs:string"/>
+		<xs:attribute name="isMarried" type="xs:string"/>
+		<xs:attribute name="PositiveSpaceRiderLevel" type="xs:string"/>
+		<xs:attribute name="SpaceAvailableRiderLevel" type="xs:string"/>
+		<xs:attribute name="EmployeeSeniorityDate" type="xs:string"/>
+		<xs:attribute name="HasEplusSubscription" type="xs:boolean"/>
+		<xs:attribute name="EplusSubscriptionEffectiveDate" type="xs:string"/>
+		<xs:attribute name="EplusSubscriptionExpiryDate" type="xs:string"/>
+		<xs:attribute name="EplusSubscriptionCode" type="xs:string"/>
+		<xs:attribute name="EplusSubscriptionBeneficiaryCnt" type="xs:integer"/>
+		<xs:attribute name="HasEplusFlightPurchase" type="xs:boolean"/>
+		<xs:attribute name="isComplimentaryEliteUpgrade" type="xs:boolean"/>
+		<xs:attribute name="isPremiumCabinUpgrade" type="xs:boolean"/>
+		<xs:attribute name="isDisabledPassenger" type="xs:boolean"/>
+		<xs:attribute name="isUnaccompaniedMinor" type="xs:boolean"/>
+		<xs:attribute name="isPrisonerOrGuard" type="xs:boolean"/>
+		<xs:attribute name="isFAM" type="xs:boolean"/>
+		<xs:attribute name="hasLapInfant" type="xs:boolean"/>
+		<xs:attribute name="isChild" type="xs:boolean"/>
+
+		<!--- new attributes added for pnr eventing 7/16/14 -->
+		<xs:attribute name="AdvancedSeatNbr" type="xs:string"/>
+		<xs:attribute name="isNRPOS" type="xs:boolean"/>
+		<xs:attribute name="action" type="EventActionCode"/>
+	</xs:complexType>
+	<xs:complexType name="ContactData">
+		<xs:sequence>
+			<xs:element name="EMail" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="Type" type="xs:string"/>
+							<xs:attribute name="PreferredLanguage" type="xs:string"/>
+							<xs:attribute name="action" type="EventActionCode"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Phone" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="Type" type="xs:string"/>
+							<xs:attribute name="PreferredLanguage" type="xs:string"/>
+							<xs:attribute name="CountryCode" type="xs:string"/>
+							<xs:attribute name="CountryAccessCode" type="xs:integer"/>
+							<xs:attribute name="action" type="EventActionCode"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="action" type="EventActionCode"/>
+	</xs:complexType>
+	<xs:complexType name="SecureFlightData">
+		<xs:sequence>
+			<xs:element name="APIS" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="DocType" type="xs:string"/>
+					<xs:attribute name="DocNbr" type="xs:string"/>
+					<xs:attribute name="IssueCountry" type="xs:string"/>
+					<xs:attribute name="ExpirationDate" type="xs:string"/>
+					<xs:attribute name="SurName" type="xs:string"/>
+					<xs:attribute name="FirstName" type="xs:string"/>
+					<xs:attribute name="MiddleName" type="xs:string"/>
+					<xs:attribute name="SurGivenName" type="xs:string"/>
+					<xs:attribute name="FirstGivenName" type="xs:string"/>
+					<xs:attribute name="BirthDate" type="xs:string"/>
+					<xs:attribute name="Gender" type="xs:string"/>
+					<xs:attribute name="Citizenship" type="xs:string"/>
+					<xs:attribute name="InfantNbr" type="xs:integer"/>
+					<xs:attribute name="action" type="EventActionCode"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="TSA" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="LastName" type="xs:string"/>
+					<xs:attribute name="FirstName" type="xs:string"/>
+					<xs:attribute name="MiddleName" type="xs:string"/>
+					<xs:attribute name="BirthDate" type="xs:string"/>
+					<xs:attribute name="Gender" type="xs:string"/>
+					<xs:attribute name="RedressNbr" type="xs:string"/>
+					<xs:attribute name="DocumentIdNumber" type="xs:string"/>
+					<xs:attribute name="action" type="EventActionCode"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="action" type="EventActionCode"/>
+	</xs:complexType>
+
+	<xs:simpleType name="EventActionCode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ADD"/>
+			<xs:enumeration value="UPD"/>
+			<xs:enumeration value="DEL"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

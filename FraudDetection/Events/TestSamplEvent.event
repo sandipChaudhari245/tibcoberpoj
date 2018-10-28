@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><event:SimpleEvent xmlns:event="http:///com/tibco/cep/designtime/core/model/event" xmlns:xmi="http://www.omg.org/XMI" xmi:version="2.0" namespace="/Events/" folder="/Events/" name="TestSamplEvent" description="" GUID="133994FE-09CB-4EB7-03A9-8077AC2032E1" ownerProjectName="FraudDetection" superEventPath="" payloadString="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#10;&#10;&lt;payload ref=&quot;pfx:Envelope&quot;/&gt;" ttlUnits="Seconds">
+  <namespaceEntries prefix="xsd" namespace="http://www.w3.org/2001/XMLSchema"/>
+  <namespaceEntries prefix="pfx" namespace="http://www.ual.com/eai/cust/Enterprise_PNR"/>
+  <registryImportEntries location="SharedResources/EnterprisePNREvent.xsd" namespace="http://www.ual.com/eai/cust/Enterprise_PNR"/>
+  <expiryAction name="TestSamplEvent_expiryAction" ownerProjectName="FraudDetection" actionText="" conditionText="">
+    <symbols>
+      <symbolList idName="testsamplevent" type="/Events/TestSamplEvent"/>
+    </symbols>
+  </expiryAction>
+</event:SimpleEvent>

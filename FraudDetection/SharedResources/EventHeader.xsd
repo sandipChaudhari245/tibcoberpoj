@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:eai="http://www.ual.com/eai/event/cust/header" targetNamespace="http://www.ual.com/eai/event/cust/header" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="eventHeader">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="eventSubType" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="eventID" type="xs:string" use="required"/>
+			<xs:attribute name="eventName" type="xs:string" use="required"/>
+			<xs:attribute name="eventCreationSystem" type="xs:string" use="required"/>
+			<xs:attribute name="eventCreationTime" type="xs:dateTime" use="required"/>
+			<xs:attribute name="user" type="xs:string" use="optional"/>
+			<xs:attribute name="version" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:pattern value="1\.0\.0"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
